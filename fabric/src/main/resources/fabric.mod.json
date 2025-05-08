@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "spiritapi",
+  "version": "${version}",
+  "name": "SpiritAPI",
+  "description": "A cross-platform architectury-based transport API for my mods.",
+  "authors": [
+    "jship"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/basic-fluid-hopper",
+    "sources": "https://github.com/jshipley/SpiritAPI"
+  },
+  "license": "MIT",
+  "icon": "assets/spiritapi/spiritapi.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.jship.spiritapi.fabric.SpiritAPIFabric"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.16.14",
+    "minecraft": "~1.21.1",
+    "java": ">=21",
+    "architectury": ">=13.0",
+    "fabric-api": "*"
+  }
+}
