@@ -1,5 +1,7 @@
 package com.jship.spiritapi.api.fluid;
 
+import java.util.function.Predicate;
+
 import com.jship.spiritapi.api.util.INBTSerializable;
 
 import dev.architectury.fluid.FluidStack;
@@ -11,6 +13,11 @@ public abstract class SpiritFluidStorage implements INBTSerializable<CompoundTag
 
     @ExpectPlatform
     public static SpiritFluidStorage create(long maxAmount, long transferRate, Runnable onCommit) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static SpiritFluidStorage create(long maxAmount, long transferRate, Runnable onCommit, Predicate<FluidStack> validFluid) {
         throw new AssertionError();
     }
 
