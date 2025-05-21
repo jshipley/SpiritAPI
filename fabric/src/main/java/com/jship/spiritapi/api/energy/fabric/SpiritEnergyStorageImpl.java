@@ -76,6 +76,6 @@ public class SpiritEnergyStorageImpl extends SpiritEnergyStorage {
     }
 
     public void deserializeNbt(HolderLookup.Provider provider, Tag nbt) {
-        this.setEnergyStored(((LongTag)nbt).getAsLong());
+        this.setEnergyStored(nbt.asLong().orElseGet(() -> 0L));
     }
 }

@@ -33,6 +33,10 @@ public class SpiritFluidStorageImpl extends SpiritFluidStorage {
         return new SpiritFluidStorageImpl((int) maxAmount, (int) transferRate, (f) -> true, onCommit);
     }
 
+    public static SpiritFluidStorage create(long maxAmount, long transferRate, Runnable onCommit, Predicate<FluidStack> validFluid) {
+        return new SpiritFluidStorageImpl((int) maxAmount, (int) transferRate, (f) -> validFluid.test(FluidStackHooksForge.fromForge(f)), onCommit);
+    }
+
     @Override
     public int getTanks() {
         return neoFluidTank.getTanks();

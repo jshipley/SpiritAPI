@@ -1,5 +1,7 @@
 package com.jship.spiritapi.api.fluid.fabric;
 
+import java.util.function.Predicate;
+
 import com.jship.spiritapi.api.fluid.SpiritFluidStorage;
 
 import dev.architectury.fluid.FluidStack;
@@ -16,11 +18,17 @@ public class SpiritFluidStorageImpl extends SpiritFluidStorage {
     public final long transferRate;
     private Runnable onCommit;
     public final SingleVariantStorage<FluidVariant> fabricFluidStorage;
+    public final Predicate<FluidStack> validFluid;
 
     private SpiritFluidStorageImpl(long maxAmount, long transferRate, Runnable onCommit) {
+        this(maxAmount, transferRate, onCommit, (fluid) -> true);
+    }
+
+    private SpiritFluidStorageImpl(long maxAmount, long transferRate, Runnable onCommit, Predicate<FluidStack> validFluid) {
         this.maxAmount = maxAmount;
         this.transferRate = transferRate;
         this.onCommit = onCommit;
+        this.validFluid = validFluid;
         this.fabricFluidStorage = new SingleVariantStorage<FluidVariant>() {
             @Override
             protected FluidVariant getBlankVariant() {
@@ -41,6 +49,10 @@ public class SpiritFluidStorageImpl extends SpiritFluidStorage {
         return new SpiritFluidStorageImpl(capacity, transferRate, onCommit);
     }
 
+    public static SpiritFluidStorage create(long maxAmount, long transferRate, Runnable onCommit, Predicate<FluidStack> validFluid) {
+        throw new AssertionError();
+    }
+
     @Override
     public int getTanks() {
         return fabricFluidStorage.getSlots().size();
@@ -58,6 +70,7 @@ public class SpiritFluidStorageImpl extends SpiritFluidStorage {
 
     @Override
     public boolean isFluidValid(int tank, FluidStack stack) {
+        if (!validFluid.test(stack)) return false;
         if (fabricFluidStorage.isResourceBlank()) return true;
         FluidStack storageStack = FluidStackHooksFabric.fromFabric(fabricFluidStorage);
         return storageStack.isFluidEqual(stack) && storageStack.isComponentEqual(stack);
