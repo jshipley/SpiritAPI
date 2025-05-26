@@ -1,7 +1,7 @@
 package com.jship.spiritapi.api.fluid.fabric;
 
-import com.jship.spiritapi.api.fluid.SpiritFluidStorageProvider;
 import com.jship.spiritapi.api.fluid.SpiritFluidStorage;
+import com.jship.spiritapi.api.fluid.SpiritFluidStorageProvider;
 
 import dev.architectury.fluid.FluidStack;
 import dev.architectury.hooks.fluid.fabric.FluidStackHooksFabric;
@@ -13,6 +13,9 @@ import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantStorage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.VehicleEntity;
@@ -109,6 +112,9 @@ public class SpiritFluidUtilImpl {
                             (extracted == containerAmount || view.getCapacity() > FluidStack.bucketAmount())) {
                         drained = extracted;
                         if (!simulate) {
+                            var fluid = resource.getFluid();
+                            var sound = fluid.getPickupSound().orElse(fluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY);
+                            player.level().playSound(null, player.blockPosition(), sound, SoundSource.PLAYERS);
                             nestedTx.commit();
                             tx.commit();
                         }
@@ -197,8 +203,12 @@ public class SpiritFluidUtilImpl {
             if (inserted == extracted &&
                     (inserted == itemStorageCapacity || itemStorageCapacity > FluidStack.bucketAmount())) {
                 filled = inserted;
-                if (!simulate)
+                if (!simulate) {
+                    var fluid = resource.getFluid();
+                    var sound = fluid.getPickupSound().orElse(fluid.is(FluidTags.LAVA) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL);
+                    player.level().playSound(null, player.blockPosition(), sound, SoundSource.PLAYERS);
                     tx.commit();
+                }
             }
         }
         return filled > 0;

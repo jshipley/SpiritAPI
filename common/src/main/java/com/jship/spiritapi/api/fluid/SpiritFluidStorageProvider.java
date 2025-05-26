@@ -1,8 +1,10 @@
 package com.jship.spiritapi.api.fluid;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.minecraft.core.Direction;
 
 public interface SpiritFluidStorageProvider {
     
-    public SpiritFluidStorage getFluidStorage(Direction face);
+    @Nullable public SpiritFluidStorage getFluidStorage(Direction face);
 }
